@@ -6,3 +6,5 @@ tensorflow,keras,visualkeras
 
 手势预测：Main_predict.py
 
+参考实现：https://www.kaggle.com/code/tathagatbanerjee/hand-recognition-cnn-model-plot-feature-plot/notebook
+
