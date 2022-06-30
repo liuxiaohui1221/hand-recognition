@@ -1,9 +1,7 @@
-import base64
-import tensorflow as tf
 import tornado.ioloop
 import tornado.web
 import json
-from Main_predict import predict
+from server.Main_predict import predict
 from model import Model
 
 # load model
