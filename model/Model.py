@@ -4,6 +4,14 @@ import tensorflow as tf
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
+class Config:
+    w, h = 64, 64
+    final_class = 6
+    MODEL_FILE_NAME = 'handgest_model.h5'
+def load_model():
+    # load model
+    return tf.keras.models.load_model(Config.MODEL_FILE_NAME)
+
 ## model
 def conv_block(filters):
     block = tf.keras.Sequential([
@@ -52,7 +60,7 @@ def build_model(act, final_class, w, h):
     return model
 
 def saveAndPlot(history , name , model):
-    model.save(name+'.h5')
+    model.save(name)
     epochs = range(1,len(history.history['loss']) + 1)
     epochs = list(epochs)
     fig = make_subplots(rows=2, cols=4,subplot_titles=("Train Loss", "Train Accuracy" , "Train Precision","Train Recall", "Validation Loss", "Validation Accuracy",

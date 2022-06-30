@@ -2,13 +2,13 @@ from reader import DataReader
 from model import Model
 import tensorflow as tf
 from sklearn import preprocessing
+from model.Model import Config
 
 tf.compat.v1.disable_eager_execution()
 physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
-w , h= 64,64
-final_class = 6
-model = Model.build_model('relu', final_class, w, h)
+
+model = Model.build_model('relu', Config.final_class, Config.w, Config.h)
 
 # 打印模型概述信息
 model.summary()
@@ -29,10 +29,10 @@ model.compile(
 # print(df.shape)
 # print(df.head())
 
-X_train, X_test, y_train, y_test, enc_test= DataReader.read_Hand_Gest_DataFrame('./input/handGest/train/', './input/handGest/test/', w, h)
+X_train, X_test, y_train, y_test, enc_test= DataReader.read_Hand_Gest_DataFrame('./input/handGest/train/', './input/handGest/test/', Config.w, Config.h)
 # train
 history = model.fit(X_train, y_train, epochs=200, validation_split=0.2, batch_size=15, verbose=1, shuffle=True)
-Model.saveAndPlot(history, 'handgest_model', model)
+Model.saveAndPlot(history, Config.MODEL_FILE_NAME, model)
 
 # load model
 #model = tf.keras.models.load_model('handgest_model.h5')
@@ -49,7 +49,7 @@ def binary_classify(y_pred):
     for inp in y_pred:
         maximum = 0
         index = 0
-        for i in range(final_class):
+        for i in range(Model.Config.final_class):
             if(maximum != max(maximum,inp[i])):
                 maximum = max(maximum,inp[i])
                 index = i
@@ -62,7 +62,7 @@ y_prediction  = binary_classify(y_prediction)
 def create_result(y,enc):
     y_final = []
     for i in range(y.shape[0]):
-        y_final.append(enc.inverse_transform(y[i].reshape(1, final_class))[0][0])
+        y_final.append(enc.inverse_transform(y[i].reshape(1, Config.final_class))[0][0])
     return y_final
 
 
@@ -91,7 +91,7 @@ y_label_desired , y_label_result = label_encode(y_class_desired , y_class_result
 
 from sklearn.metrics import classification_report
 tn = []
-for cat in enc_test.categories_[0].reshape(final_class,1):
+for cat in enc_test.categories_[0].reshape(Config.final_class,1):
     tn.append(cat[0])
 target_names = tn
 print(classification_report(y_label_desired, y_label_result, target_names=target_names))
