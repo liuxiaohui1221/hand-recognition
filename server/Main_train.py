@@ -19,30 +19,24 @@ METRICS = [
                 tf.keras.metrics.Recall(name='recall')
 ]
 model.compile(
-                optimizer='RMSprop',
+                optimizer='Adam',
                 loss='categorical_crossentropy',
                 metrics=METRICS
         )
-
-# data creation
-# df = DataReader.Create_Directory_DataFrame('./input/leapgestrecog/leapgestrecog/')
-# print(df.shape)
-# print(df.head())
-
-X_train, X_test, y_train, y_test, enc_test= DataReader.read_Hand_Gest_DataFrame('./input/handGest/train/', './input/handGest/test/', Config.w, Config.h)
-# train
-history = model.fit(X_train, y_train, epochs=200, validation_split=0.2, batch_size=15, verbose=1, shuffle=True)
-Model.saveAndPlot(history, Config.MODEL_FILE_NAME, model)
-
 # load model
-#model = tf.keras.models.load_model('handgest_model.h5')
+model = tf.keras.models.load_model('handgest_model.h5')
+
+X_train, X_test, y_train, y_test, enc_test= DataReader.read_Hand_Gest_DataFrame('../input/handGest/train/', '../input/handGest/test/', Config.w, Config.h)
+# train
+history = model.fit(X_train, y_train, epochs=200, validation_split=0.3, batch_size=32, verbose=1, shuffle=True)
+Model.saveAndPlot(history, Config.MODEL_FILE_NAME, model)
 
 # test
 y_pred = model.evaluate(X_test , y_test, verbose = True)
 print(y_pred)
 
 from tensorflow.keras.utils import plot_model
-plot_model(model, to_file='model.png',show_shapes=True)
+plot_model(model, to_file='./model.png',show_shapes=True)
 
 y_prediction = model.predict(X_test)
 def binary_classify(y_pred):
@@ -88,7 +82,6 @@ def label_encode(y, y_pred):
 y_class_result = create_result(y_prediction,enc_test)
 y_class_desired = create_result(y_test,enc_test)
 y_label_desired , y_label_result = label_encode(y_class_desired , y_class_result)
-
 from sklearn.metrics import classification_report
 tn = []
 for cat in enc_test.categories_[0].reshape(Config.final_class,1):

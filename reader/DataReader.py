@@ -60,7 +60,7 @@ def readImageToDataFrame(Class,imgPath):
     df_test = df_test.append({'Class': Class, 'Location': imgPath}, ignore_index=True)
     X_test, y_test, enc_test = handle_data(df_test, 64, 64)
     return X_test, y_test, enc_test
-def handle_img(img,w=64,h=64):
+def handle_img(img,w,h):
     train_image = []
     img = cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA)
     img = img.reshape(w, h, 1)

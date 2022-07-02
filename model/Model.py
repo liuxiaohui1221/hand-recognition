@@ -3,9 +3,10 @@ pyo.init_notebook_mode()
 import tensorflow as tf
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 
 class Config:
-    w, h = 64, 64
+    w, h = 32, 32
     final_class = 6
     MODEL_FILE_NAME = 'handgest_model.h5'
 def load_model():
@@ -75,3 +76,4 @@ def saveAndPlot(history , name , model):
     fig.add_trace(go.Scatter(x=epochs, y=history.history['val_recall']), row=2, col=4)
     fig.update_layout(showlegend=False,height=1000, width=1200, title_text=name)
     pyo.iplot(fig, filename = 'Act_train_rec')
+    plt.show()
