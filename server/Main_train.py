@@ -24,7 +24,7 @@ model.compile(
                 metrics=METRICS
         )
 # load model
-model = tf.keras.models.load_model('handgest_model.h5')
+# model = tf.keras.models.load_model('handgest_model.h5')
 
 X_train, X_test, y_train, y_test, enc_test= DataReader.read_Hand_Gest_DataFrame('../input/handGest/train/', '../input/handGest/test/', Config.w, Config.h)
 # train

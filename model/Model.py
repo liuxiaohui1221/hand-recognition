@@ -4,6 +4,8 @@ import tensorflow as tf
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+import numpy as np
+
 
 class Config:
     w, h = 32, 32
@@ -64,16 +66,20 @@ def saveAndPlot(history , name , model):
     model.save(name)
     epochs = range(1,len(history.history['loss']) + 1)
     epochs = list(epochs)
-    fig = make_subplots(rows=2, cols=4,subplot_titles=("Train Loss", "Train Accuracy" , "Train Precision","Train Recall", "Validation Loss", "Validation Accuracy",
-                                                      "Validation Precision","Validation Recall"))
-    fig.add_trace(go.Scatter(x=epochs, y=history.history['loss']), row=1, col=1)
-    fig.add_trace(go.Scatter(x=epochs, y=history.history['accuracy']), row=1, col=2)
-    fig.add_trace(go.Scatter(x=epochs, y=history.history['precision']), row=1, col=3)
-    fig.add_trace(go.Scatter(x=epochs, y=history.history['recall']), row=1, col=4)
-    fig.add_trace(go.Scatter(x=epochs, y=history.history['val_loss']), row=2, col=1)
-    fig.add_trace(go.Scatter(x=epochs, y=history.history['val_accuracy']), row=2, col=2)
-    fig.add_trace(go.Scatter(x=epochs, y=history.history['val_precision']), row=2, col=3)
-    fig.add_trace(go.Scatter(x=epochs, y=history.history['val_recall']), row=2, col=4)
-    fig.update_layout(showlegend=False,height=1000, width=1200, title_text=name)
-    pyo.iplot(fig, filename = 'Act_train_rec')
+    Plot(241, epochs, history, 'loss')
+    Plot(242, epochs, history, 'accuracy')
+    Plot(243,epochs,history,'precision')
+    Plot(244,epochs,history,'recall')
+
+    Plot(245, epochs, history, 'val_loss')
+    Plot(246, epochs, history, 'val_accuracy')
+    Plot(247, epochs, history, 'val_precision')
+    Plot(248, epochs, history, 'val_recall')
     plt.show()
+def Plot(poc,epochs,history,label):
+    plt.subplot(poc)
+    y = history.history[label]
+    plt.plot(epochs, y, label=label)
+    plt.xlabel('epoch')
+    plt.ylabel(label)
+    plt.title(label)
